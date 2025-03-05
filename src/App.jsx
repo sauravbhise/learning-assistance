@@ -6,8 +6,10 @@ import DashboardPage from "./components/DashboardPage"
 import Admin from "./components/Admin"
 import LearningAssistant from "./components/LearningAssistant"
 import Student from "./components/Student"
+import UnauthorizedPage from "./components/UnauthorizedPage"
 import NotFoundPage from "./components/NotFoundPage"
 import RequireAuth from "./components/RequireAuth"
+import ROLES from "./utils/roles"
 
 function App() {
 
@@ -18,16 +20,27 @@ function App() {
         {/* Public Routes */}
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path="unauthorized" element={<UnauthorizedPage />} />
 
         {/* Protected Routes */}
-        <Route element={<RequireAuth />}>
+        <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN, ROLES.LA, ROLES.STUDENT]} />}>
           <Route path="/" element={<DashboardPage />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
           <Route path="admin" element={<Admin />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.LA]} />}>
           <Route path="la" element={<LearningAssistant />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.STUDENT]} />}>
           <Route path="student" element={<Student />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
+
       </Route>
     </Routes>
   )
