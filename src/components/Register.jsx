@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import mockUsers from "../mock/mockUsers";
+import { register } from "../api/axios";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -47,7 +47,7 @@ const Register = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		mockUsers.push({ email, password: pwd, role: 'USER' })
+		register(email, pwd)
 		setSuccess(true)
 	}
 

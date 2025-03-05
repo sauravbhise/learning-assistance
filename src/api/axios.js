@@ -1,7 +1,7 @@
 import mockUsers from "../mock/mockUsers"
 
-const signup = () => {
-
+const register = (email, password) => {
+	mockUsers.push({ email, password, role: 'USER' })
 }
 
 const login = (email, password) => {
@@ -10,4 +10,4 @@ const login = (email, password) => {
 
 }
 
-export { login }
+export { register, login }
