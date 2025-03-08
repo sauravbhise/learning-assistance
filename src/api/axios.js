@@ -1,12 +1,12 @@
-import mockUsers from "../mock/mockUsers"
+import mockDB from "../mock/mockDB"
 
 const register = (email, password) => {
-	mockUsers.push({ email, password, role: 'USER' })
+	mockDB.users.push({ email, password, role: 'USER' })
 }
 
 const login = (email, password) => {
 
-	return mockUsers.find((user) => user.email === email && user.password === password)
+	return mockDB.users.find((user) => user.email === email && user.password === password)
 
 }
 
