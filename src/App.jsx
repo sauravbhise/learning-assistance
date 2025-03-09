@@ -5,7 +5,9 @@ import Layout from "./components/Layout"
 import DashboardPage from "./components/DashboardPage"
 import Admin from "./components/Admin"
 import LearningAssistant from "./components/LearningAssistant"
-import Student from "./components/Student"
+import StudentDashboard from "./components/student/StudentDashboard"
+import UploadAssignment from "./components/student/FileUpload"
+import SubmissionPage from "./components/student/SubmissionPage"
 import UnauthorizedPage from "./components/UnauthorizedPage"
 import NotFoundPage from "./components/NotFoundPage"
 import RequireAuth from "./components/RequireAuth"
@@ -36,7 +38,9 @@ function App() {
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.STUDENT]} />}>
-          <Route path="student" element={<Student />} />
+          <Route path="student" element={<StudentDashboard />} />
+          <Route path="student/assignments/:assignmentId/upload" element={<UploadAssignment />} />
+          <Route path="student/submissions/:submissionId" element={<SubmissionPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import { login } from '../api/axios'
 
@@ -32,8 +32,8 @@ const Login = () => {
 		const response = login(email, pwd)
 
 		if (response) {
-			const { role } = response
-			setAuth({ email, pwd, role })
+			const { id, email, password, role } = response
+			setAuth({ id, email, pwd: password, role })
 			setEmail('')
 			setPwd('')
 			navigate(from, { replace: true })
