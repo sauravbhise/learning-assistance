@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import axios from "../api/axios";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -9,26 +9,28 @@ const REGISTER_URL = "/register";
 const RegisterPage = () => {
 	const emailRef = useRef();
 	const errRef = useRef();
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const fromUsersPage = location.state?.fromUsersPage || false;
 
 	const [email, setEmail] = useState("");
 	const [validEmail, setValidEmail] = useState(false);
-	const [emailFocus, setEmailFocus] = useState(false);
-
 	const [pwd, setPwd] = useState("");
 	const [validPwd, setValidPwd] = useState(false);
-	const [pwdFocus, setPwdFocus] = useState(false);
-
 	const [matchPwd, setMatchPwd] = useState("");
 	const [validMatch, setValidMatch] = useState(false);
-	const [matchFocus, setMatchFocus] = useState(false);
-
 	const [role, setRole] = useState("");
 	const [errMsg, setErrMsg] = useState("");
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
-		emailRef.current.focus();
-	}, []);
+		if (!fromUsersPage) {
+			navigate("/login", { replace: true });
+		} else {
+			emailRef.current.focus();
+		}
+	}, [fromUsersPage, navigate]);
 
 	useEffect(() => {
 		setValidEmail(EMAIL_REGEX.test(email));
@@ -45,19 +47,24 @@ const RegisterPage = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (!validEmail || !validPwd || !validMatch) {
+		if (!validEmail || !validPwd || !validMatch || !role) {
 			setErrMsg("Invalid Entry");
 			errRef.current.focus();
 			return;
 		}
 
 		try {
-			const response = await axios.post(
+			await axios.post(
 				REGISTER_URL,
 				JSON.stringify({ email, password: pwd, role }),
 				{ headers: { "Content-Type": "application/json" } }
 			);
+
 			setSuccess(true);
+
+			setTimeout(() => {
+				navigate(fromUsersPage ? "/admin" : "/login"); // Redirect accordingly
+			}, 2000);
 		} catch (error) {
 			if (!error?.response) {
 				setErrMsg("No Server Response");
@@ -75,16 +82,13 @@ const RegisterPage = () => {
 			{success ? (
 				<div>
 					<h1>Success!</h1>
-					<NavLink to="/login">Sign In</NavLink>
+					<p>Redirecting...</p>
 				</div>
 			) : (
 				<section>
-					<p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>
-						{errMsg}
-					</p>
+					<p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
 					<h1>Register</h1>
 					<form onSubmit={handleSubmit}>
-						{/* Email */}
 						<label htmlFor="email">Email:</label>
 						<input
 							type="email"
@@ -93,81 +97,43 @@ const RegisterPage = () => {
 							autoComplete="off"
 							onChange={(e) => setEmail(e.target.value)}
 							required
-							onFocus={() => setEmailFocus(true)}
-							onBlur={() => setEmailFocus(false)}
 						/>
-						{emailFocus && email && !validEmail && <p>Please enter a valid email!</p>}
+						{!validEmail && email && <p>Please enter a valid email!</p>}
 
-						{/* Password */}
 						<label htmlFor="password">Password:</label>
 						<input
 							type="password"
 							id="password"
 							onChange={(e) => setPwd(e.target.value)}
 							required
-							onFocus={() => setPwdFocus(true)}
-							onBlur={() => setPwdFocus(false)}
 						/>
-						{pwdFocus && !validPwd && (
-							<p>
-								Password must be:
-								<br />- More than 8 characters
-								<br />- Include uppercase & lowercase letters
-								<br />- Include a number
-								<br />- Include a special character
-							</p>
+						{!validPwd && pwd && (
+							<p>Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character.</p>
 						)}
 
-						{/* Confirm Password */}
 						<label htmlFor="confirmPwd">Confirm Password:</label>
 						<input
 							type="password"
 							id="confirmPwd"
 							onChange={(e) => setMatchPwd(e.target.value)}
 							required
-							onFocus={() => setMatchFocus(true)}
-							onBlur={() => setMatchFocus(false)}
 						/>
-						{matchFocus && !validMatch && <p>Both passwords must match!</p>}
+						{!validMatch && matchPwd && <p>Passwords must match!</p>}
 
-						{/* Role Selection */}
-						<div className="radio">
-							<h3>Role</h3>
-							<label>
-								<input
-									type="radio"
-									value="ADMIN"
-									checked={role === "ADMIN"}
-									onChange={(e) => setRole(e.target.value)}
-								/>
-								Admin
-							</label>
-						</div>
-						<div className="radio">
-							<label>
-								<input
-									type="radio"
-									value="LA"
-									checked={role === "LA"}
-									onChange={(e) => setRole(e.target.value)}
-								/>
-								Learning Assistant
-							</label>
-						</div>
-						<div className="radio">
-							<label>
-								<input
-									type="radio"
-									value="STUDENT"
-									checked={role === "STUDENT"}
-									onChange={(e) => setRole(e.target.value)}
-								/>
-								Student
-							</label>
-						</div>
+						<h3>Role</h3>
+						<label>
+							<input type="radio" value="LA" checked={role === "LA"} onChange={(e) => setRole(e.target.value)} />
+							Learning Assistant
+						</label>
+						<label>
+							<input type="radio" value="STUDENT" checked={role === "STUDENT"} onChange={(e) => setRole(e.target.value)} />
+							Student
+						</label>
 
 						<button disabled={!validEmail || !validPwd || !validMatch || !role}>Sign Up</button>
 					</form>
+
+					<button onClick={() => navigate("/admin")}>Cancel</button>
 				</section>
 			)}
 		</>
@@ -175,3 +141,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
