@@ -3,7 +3,10 @@ const mockDB = {
 		{ "id": "1", "email": "admin@example.com", "password": "admin123", "role": "ADMIN" },
 		{ "id": "2", "email": "la@example.com", "password": "la123", "role": "LA" },
 		{ "id": "3", "email": "student1@example.com", "password": "student123", "role": "STUDENT" },
-		{ "id": "4", "email": "student2@example.com", "password": "student123", "role": "STUDENT" }
+		{ "id": "4", "email": "student2@example.com", "password": "student123", "role": "STUDENT" },
+		{ "id": "5", "email": "student3@example.com", "password": "student123", "role": "STUDENT" },
+		{ "id": "6", "email": "student4@example.com", "password": "student123", "role": "STUDENT" },
+		{ "id": "7", "email": "student5@example.com", "password": "student123", "role": "STUDENT" }
 	],
 	"la_student_mapping": [
 		{ "id": "100", "la_id": "2", "student_id": "3", "assigned_at": "2025-03-06T12:00:00Z" },

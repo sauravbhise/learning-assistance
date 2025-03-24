@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom"
-import Register from "./components/RegisterPage"
+import RegisterPage from "./components/RegisterPage"
 import Login from "./components/LoginPage"
 import Layout from "./components/Layout"
 import DashboardPage from "./components/DashboardPage"
 import Admin from "./components/Admin"
-import LearningAssistant from "./components/LearningAssistant"
+import LearningAssistant from "./components/la/LearningAssistantDashboard"
+import AddStudentPage from "./components/la/AddStudentPage"
+import AddAssignmentPage from "./components/la/AddAssignmentPage"
 import StudentDashboard from "./components/student/StudentDashboard"
 import UploadAssignment from "./components/student/FileUpload"
 import SubmissionPage from "./components/student/SubmissionPage"
@@ -20,7 +22,7 @@ function App() {
       <Route path="/" element={<Layout />}>
 
         {/* Public Routes */}
-        <Route path="register" element={<Register />} />
+        <Route path="register" element={<RegisterPage />} />
         <Route path="login" element={<Login />} />
         <Route path="unauthorized" element={<UnauthorizedPage />} />
 
@@ -35,6 +37,8 @@ function App() {
 
         <Route element={<RequireAuth allowedRoles={[ROLES.LA]} />}>
           <Route path="la" element={<LearningAssistant />} />
+          <Route path="la/addStudent" element={<AddStudentPage />} />
+          <Route path="la/addAssignment" element={<AddAssignmentPage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.STUDENT]} />}>

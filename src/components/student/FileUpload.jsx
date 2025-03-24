@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { addSubmission } from "../../api/axios";
+import { addSubmission } from "../../api/mock-axios";
 
 const FileUpload = () => {
 

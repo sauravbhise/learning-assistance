@@ -1,8 +1,12 @@
 import React from 'react'
+import Users from './Users'
 
 const Admin = () => {
 	return (
-		<div>Admin</div>
+		<div>
+			<h2>Admin Page</h2>
+			<Users />
+		</div>
 	)
 }
 

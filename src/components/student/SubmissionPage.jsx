@@ -1,17 +1,17 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { getSubmission, getEvaluation } from '../../api/axios'
+import { getSubmissionById, getEvaluationBySubmissionId } from '../../api/mock-axios'
 
 const SubmissionPage = () => {
 
 	const { submissionId } = useParams()
-	const submission = getSubmission(submissionId)
+	const submission = getSubmissionById(submissionId)
 	const { id, file_url, evaluated } = submission
 
 	let feedback, score
 
 	if (evaluated) {
-		const evaluation = getEvaluation(id)
+		const evaluation = getEvaluationBySubmissionId(id)
 		if (evaluation) {
 			feedback = evaluation.feedback
 			score = evaluation.score
@@ -23,11 +23,9 @@ const SubmissionPage = () => {
 		<div>
 			<h1>Submission</h1>
 			<p>{id}</p>
-			<button>
-				<a href={file_url}>
-					View File
-				</a>
-			</button>
+			<a href={submission.file_url} target="_blank" rel="noopener noreferrer">
+				<button>View File</button>
+			</a>
 			<h3>Evaluation</h3>
 			{evaluated
 				? <div>

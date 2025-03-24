@@ -1,37 +1,12 @@
-import mockDB from "../mock/mockDB"
-import { v7 as uuid } from "uuid"
-import dayjs from "dayjs"
-
-const register = (email, password) => {
-	mockDB.users.push({ email, password, role: 'USER' })
-}
-
-const login = (email, password) => {
-
-	return mockDB.users.find((user) => user.email === email && user.password === password)
-
-}
+import axios from "axios";
 
 
-const addSubmission = (assignment_id, student_id, filename) => {
+const BASE_URL = 'http://localhost:8080'
 
-	const now = dayjs()
+export default axios.create({
+	baseURL: BASE_URL
+})
 
-	mockDB.submissions.push({
-		id: uuid(), assignment_id, student_id,
-		file_url: `https://example.com/${filename}`, submitted_at: now.format("YYYY"),
-		evaluated: false
-	})
-
-	console.log(mockDB.submissions)
-}
-
-const getSubmission = (submissionId) => {
-	return mockDB.submissions.find((submission) => submission.id === submissionId)
-}
-
-const getEvaluation = (submissionId) => {
-	return mockDB.evaluations.find((evalutation) => evalutation.submission_id === submissionId)
-}
-
-export { register, login, addSubmission, getSubmission, getEvaluation }
+export const axiosPrivate = axios.create({
+	baseURL: BASE_URL
+})

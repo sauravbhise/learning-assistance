@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AssignmentList from './AssignmentList'
 import SubmissionList from './SubmissionList'
-import mockDB from '../../mock/mockDB'
+import useAuth from '../../hooks/useAuth'
+import { getStudentAssignments, getStudentSubmissions } from '../../api/mock-axios'
 
 const StudentDashboard = () => {
-	const assignments = mockDB.assignments
-	const submissions = mockDB.submissions
+
+	const { auth } = useAuth()
+	const { id } = auth
+
+	const assignments = getStudentAssignments(id)
+	const submissions = getStudentSubmissions(id)
 
 	return (
 		<div>
