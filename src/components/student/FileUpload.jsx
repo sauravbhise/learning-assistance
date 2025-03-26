@@ -16,13 +16,17 @@ const FileUpload = () => {
 		}
 	}
 
-	const handleUpload = () => {
+	const handleUpload = async () => {
 		if (!file) {
 			alert("Please select a file first!")
 		}
 
 		const studentId = auth.id
-		addSubmission(assignmentId, studentId, file.name)
+		try {
+			addSubmission(assignmentId, studentId, file.name)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return (
