@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { addAssignment } from "../../api/mock-axios";
+import axios from "../../api/axios";
 
 const AddAssignmentPage = () => {
 	const { auth } = useAuth();
@@ -25,12 +25,20 @@ const AddAssignmentPage = () => {
 			return;
 		}
 
-		// Simulate file upload and get a URL (Replace this with actual API call)
-		const fileUrl = URL.createObjectURL(file);
+		const formData = new FormData()
+		formData.append("title", title)
+		formData.append("description", description)
+		formData.append("createdBy", laId)
+		formData.append("file", file)
 
-		const newAssignment = await addAssignment(laId, title, description, fileUrl);
+		const newAssignmentResponse = await axios.post("/assignments", formData, {
+			headers: {
+				Authorization: "Bearer " + auth.accessToken,
+				"Content-Type": "multipart/form-data"
+			}
+		})
 
-		if (newAssignment) {
+		if (newAssignmentResponse.status === 200) {
 			setMessage("Assignment added successfully!");
 			setTitle("");
 			setDescription("");

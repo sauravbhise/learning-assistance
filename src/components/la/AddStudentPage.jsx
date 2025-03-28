@@ -1,52 +1,76 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { addStudentToLa, getAllStudents, getStudentsByLaId } from "../../api/mock-axios";
+import axios from "../../api/axios";
 import StudentList from "../../components/la/StudentList";
 
 const AddStudentPage = () => {
 	const { auth } = useAuth();
-	const { id: laId } = auth; // LA ID
+	const { id: laId } = auth;
 	const navigate = useNavigate();
 
-	const [students, setStudents] = useState([]);
+	const [students, setStudents] = useState(null);
 	const [confirmationMessage, setConfirmationMessage] = useState("");
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchStudents = async () => {
 			try {
-				// Fetch all students
-				const allStudents = await getAllStudents();
+				let allStudents = [];
+				let assignedStudents = [];
 
-				// Fetch students already assigned to this LA
-				const assignedStudents = await getStudentsByLaId(laId);
+				const allStudentsResponse = await axios.get("/users/students", {
+					headers: {
+						Authorization: "Bearer " + auth.accessToken
+					}
+				});
+
+				if (allStudentsResponse.status !== 204 && allStudentsResponse.data.length) {
+					allStudents = allStudentsResponse.data;
+				}
+
+				const assignedStudentsResponse = await axios.get(`/la/${laId}/students`, {
+					headers: {
+						Authorization: "Bearer " + auth.accessToken
+					}
+				});
+
+				if (assignedStudentsResponse.status !== 204 && assignedStudentsResponse.data.length) {
+					assignedStudents = assignedStudentsResponse.data;
+				}
+
 				const assignedStudentIds = new Set(assignedStudents.map(student => student.id));
-
-				// Filter out students who are already assigned
 				const availableStudents = allStudents.filter(student => !assignedStudentIds.has(student.id));
 
 				setStudents(availableStudents);
 			} catch (error) {
 				console.error("Error fetching students:", error);
+				setStudents([]);
+			} finally {
+				setLoading(false);
 			}
 		};
 
 		fetchStudents();
-	}, [laId]);
+	}, [laId, auth.accessToken]);
 
 	const handleAddStudent = async (studentId) => {
 		try {
-			const success = addStudentToLa(laId, studentId);
-			if (success) {
-				const student = students.find((s) => s.id === studentId);
-				setConfirmationMessage(`Student added!`);
+			await axios.post('/la-students', {
+				laId,
+				studentId,
+				assignedAt: new Date().toISOString()
+			}, {
+				headers: {
+					Authorization: "Bearer " + auth.accessToken,
+					"Content-Type": "application/json"
+				}
+			});
 
-				// Remove the added student from the list
-				setStudents((prevStudents) => prevStudents.filter((s) => s.id !== studentId));
+			setConfirmationMessage(`Student added!`);
+			setStudents((prevStudents) => prevStudents?.filter((s) => s.id !== studentId) || []);
 
-				// Clear message after 3 seconds
-				setTimeout(() => setConfirmationMessage(""), 3000);
-			}
+			setTimeout(() => setConfirmationMessage(""), 3000);
 		} catch (error) {
 			console.error("Error adding student:", error);
 		}
@@ -58,7 +82,9 @@ const AddStudentPage = () => {
 
 			{confirmationMessage && <p style={{ color: "green" }}>{confirmationMessage}</p>}
 
-			{students.length > 0 ? (
+			{loading ? (
+				<p>Loading students...</p>
+			) : students?.length > 0 ? (
 				<StudentList students={students} onAction={handleAddStudent} actionLabel="Add Student" />
 			) : (
 				<p>No students available to add.</p>
@@ -70,3 +96,4 @@ const AddStudentPage = () => {
 };
 
 export default AddStudentPage;
+

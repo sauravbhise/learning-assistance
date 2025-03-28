@@ -58,8 +58,10 @@ const StudentDashboard = () => {
 		<div>
 			<h1>Student Dashboard</h1>
 
+			<h3>Assignments</h3>
 			{assignments ? <AssignmentList assignments={assignments} /> : <p>No Assignments</p>}
 
+			<h3>Submissions</h3>
 			{submissions ? <SubmissionList submissions={submissions} /> : <p>No Submissions</p>}
 		</div>
 	);
