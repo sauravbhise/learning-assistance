@@ -7,6 +7,7 @@ import Admin from "./components/admin/Admin"
 import LearningAssistant from "./components/la/LearningAssistantDashboard"
 import AddStudentPage from "./components/la/AddStudentPage"
 import AddAssignmentPage from "./components/la/AddAssignmentPage"
+import EvaluationPage from "./components/la/EvaluationPage"
 import StudentDashboard from "./components/student/StudentDashboard"
 import UploadAssignment from "./components/student/FileUpload"
 import SubmissionPage from "./components/student/SubmissionPage"
@@ -39,6 +40,7 @@ function App() {
           <Route path="la" element={<LearningAssistant />} />
           <Route path="la/addStudent" element={<AddStudentPage />} />
           <Route path="la/addAssignment" element={<AddAssignmentPage />} />
+          <Route path="la/evaluate/:submissionId" element={<EvaluationPage />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.STUDENT]} />}>
