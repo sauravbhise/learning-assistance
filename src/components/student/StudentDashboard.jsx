@@ -14,7 +14,7 @@ const StudentDashboard = () => {
 	useEffect(() => {
 		const fetchAssignments = async () => {
 			try {
-				const response = await axios.get(`/users/${id}/assignments`, {
+				const response = await axios.get(`/students/${id}/assignments`, {
 					headers: {
 						Authorization: "Bearer " + auth.accessToken,
 					},

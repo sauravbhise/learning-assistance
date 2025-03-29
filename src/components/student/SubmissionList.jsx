@@ -1,15 +1,14 @@
-import React from 'react'
-import SubmissionListItem from './SubmissionListItem'
+import React from "react";
+import SubmissionListItem from "./SubmissionListItem";
 
 const SubmissionList = ({ submissions }) => {
 	return (
-		<div>
-			<h3>Your Submissions</h3>
-			<ol>
-				<SubmissionListItem submissions={submissions} />
-			</ol>
-		</div>
-	)
-}
+		<ol>
+			{submissions.map(submission => (
+				<SubmissionListItem key={submission.id} submission={submission} />
+			))}
+		</ol>
+	);
+};
 
-export default SubmissionList
+export default SubmissionList;
