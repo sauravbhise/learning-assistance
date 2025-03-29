@@ -5,6 +5,7 @@ import axios from "../../api/axios";
 
 const EvaluationPage = () => {
 	const { auth } = useAuth();
+	const { id: laId } = auth
 	const { submissionId } = useParams();
 	const navigate = useNavigate();
 
@@ -39,6 +40,7 @@ const EvaluationPage = () => {
 				`/evaluations`,
 				{
 					submissionId,
+					evaluatorId: laId,
 					score: parseFloat(score),
 					feedback,
 				},
@@ -48,7 +50,7 @@ const EvaluationPage = () => {
 			);
 
 			alert("Evaluation submitted successfully!");
-			navigate("/la"); // Redirect to the LA dashboard
+			navigate("/la");
 		} catch (err) {
 			console.error("Error submitting evaluation:", err);
 			setError("Failed to submit evaluation.");
