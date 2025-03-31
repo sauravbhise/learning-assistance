@@ -1,15 +1,14 @@
-import React from 'react'
-import AssignmentListItem from './AssignmentListItem'
+import React from "react";
+import AssignmentListItem from "./AssignmentListItem";
 
-const AssignmentList = ({ assignments }) => {
+const AssignmentList = ({ assignments, actionLabel }) => {
 	return (
-		<div>
-			<h3>Your Assignments</h3>
-			<ol>
-				<AssignmentListItem assignments={assignments} />
-			</ol>
-		</div>
-	)
-}
+		<ul>
+			{assignments.map((assignment) => (
+				<AssignmentListItem key={assignment.id} assignment={assignment} actionLabel={actionLabel} />
+			))}
+		</ul>
+	);
+};
 
-export default AssignmentList
+export default AssignmentList;

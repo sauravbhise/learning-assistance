@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import useDownloadFile from "../../utils/downloadFile";
 
 const SubmissionPage = () => {
 	const { auth } = useAuth();
-	const { submissionId } = useParams();
+	const { id } = auth;
+	const { assignmentId } = useParams();
+	const navigate = useNavigate();
+	const downloadFile = useDownloadFile();
+	let submissionId = null;
 
 	const [submission, setSubmission] = useState(null);
 	const [evaluation, setEvaluation] = useState(null);
@@ -15,16 +20,16 @@ const SubmissionPage = () => {
 	useEffect(() => {
 		const fetchSubmission = async () => {
 			try {
-				const response = await axios.get(`/submissions/${submissionId}`, {
+				const response = await axios.get(`/students/${id}/assignments/${assignmentId}/submission`, {
 					headers: {
 						Authorization: `Bearer ${auth.accessToken}`,
 					},
 				});
 				setSubmission(response.data);
+				submissionId = response.data.id;
 
-				// If submission is evaluated, fetch evaluation details
 				if (response.data.evaluated) {
-					const evalResponse = await axios.get(`/evaluations/submission/${submissionId}`, {
+					const evalResponse = await axios.get(`/submissions/${submissionId}/evaluation`, {
 						headers: {
 							Authorization: `Bearer ${auth.accessToken}`,
 						},
@@ -50,9 +55,7 @@ const SubmissionPage = () => {
 		<div>
 			<h1>Submission</h1>
 			<p>ID: {submission.id}</p>
-			<a href={submission.fileUrl} target="_blank" rel="noopener noreferrer">
-				<button>View File</button>
-			</a>
+			<button onClick={() => downloadFile(submission.filePath)}>Download File</button>
 
 			<h3>Evaluation</h3>
 			{submission.evaluated ? (
@@ -67,6 +70,10 @@ const SubmissionPage = () => {
 			) : (
 				<p>Evaluation Pending!</p>
 			)}
+
+			<button onClick={() => navigate(-1)} style={{ marginTop: "20px" }}>
+				Go Back
+			</button>
 		</div>
 	);
 };

@@ -9,7 +9,7 @@ import AddStudentPage from "./components/la/AddStudentPage"
 import AddAssignmentPage from "./components/la/AddAssignmentPage"
 import EvaluationPage from "./components/la/EvaluationPage"
 import StudentDashboard from "./components/student/StudentDashboard"
-import UploadAssignment from "./components/student/FileUpload"
+import AddSubmissionPage from "./components/student/AddSubmissionPage"
 import SubmissionPage from "./components/student/SubmissionPage"
 import UnauthorizedPage from "./components/UnauthorizedPage"
 import NotFoundPage from "./components/NotFoundPage"
@@ -45,8 +45,8 @@ function App() {
 
         <Route element={<RequireAuth allowedRoles={[ROLES.STUDENT]} />}>
           <Route path="student" element={<StudentDashboard />} />
-          <Route path="student/assignments/:assignmentId/upload" element={<UploadAssignment />} />
-          <Route path="student/submissions/:submissionId" element={<SubmissionPage />} />
+          <Route path="student/assignments/:assignmentId/upload" element={<AddSubmissionPage />} />
+          <Route path="student/assignments/:assignmentId/submission" element={<SubmissionPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

@@ -1,22 +1,20 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-const AssignmentListItem = ({ assignments }) => {
+const AssignmentListItem = ({ assignment, actionLabel }) => {
+	const actionPath =
+		actionLabel === "Upload"
+			? `/student/assignments/${assignment.id}/upload`
+			: `/student/assignments/${assignment.id}/submission`;
 
 	return (
-		<div>
-			{assignments.map(assignment => {
-				return (
-					<div key={assignment.title}>
-						<li>{assignment.title}</li>
-						<NavLink to={`/student/assignments/${assignment.id}/upload`}>
-							<button>Upload</button>
-						</NavLink>
-					</div>
-				)
-			})}
-		</div>
-	)
-}
+		<li key={assignment.id}>
+			{assignment.title}
+			<NavLink to={actionPath}>
+				<button>{actionLabel}</button>
+			</NavLink>
+		</li>
+	);
+};
 
-export default AssignmentListItem
+export default AssignmentListItem;

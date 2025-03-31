@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
+import useDownloadFile from "../../utils/downloadFile";
 
 const EvaluationPage = () => {
 	const { auth } = useAuth();
@@ -14,6 +15,8 @@ const EvaluationPage = () => {
 	const [feedback, setFeedback] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+
+	const downloadFile = useDownloadFile();
 
 	useEffect(() => {
 		const fetchSubmission = async () => {
@@ -66,9 +69,7 @@ const EvaluationPage = () => {
 			<h1>Evaluate Submission</h1>
 			<p><strong>Submission ID:</strong> {submission.id}</p>
 			<p><strong>Assignment ID:</strong> {submission.assignmentId}</p>
-			<a href={submission.fileUrl} target="_blank" rel="noopener noreferrer">
-				<button>View Submitted File</button>
-			</a>
+			<button onClick={() => downloadFile(submission.filePath)}>View Submitted File</button>
 
 			<h3>Provide Evaluation</h3>
 			<form onSubmit={handleSubmitEvaluation}>
