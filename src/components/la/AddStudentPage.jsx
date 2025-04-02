@@ -1,58 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import StudentList from "../../components/la/StudentList";
 
 const AddStudentPage = () => {
 	const { auth } = useAuth();
-	const { id: laId } = auth;
 	const navigate = useNavigate();
+	const { laId } = useParams();
 
 	const [students, setStudents] = useState(null);
 	const [confirmationMessage, setConfirmationMessage] = useState("");
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchStudents = async () => {
+		const fetchUnassignedStudents = async () => {
 			try {
-				let allStudents = [];
-				let assignedStudents = [];
-
-				const allStudentsResponse = await axios.get("/users/students", {
+				const response = await axios.get("/users/students/unassigned", {
 					headers: {
 						Authorization: "Bearer " + auth.accessToken
 					}
 				});
 
-				if (allStudentsResponse.status !== 204 && allStudentsResponse.data.length) {
-					allStudents = allStudentsResponse.data;
-				}
-
-				const assignedStudentsResponse = await axios.get(`/la/${laId}/students`, {
-					headers: {
-						Authorization: "Bearer " + auth.accessToken
-					}
-				});
-
-				if (assignedStudentsResponse.status !== 204 && assignedStudentsResponse.data.length) {
-					assignedStudents = assignedStudentsResponse.data;
-				}
-
-				const assignedStudentIds = new Set(assignedStudents.map(student => student.id));
-				const availableStudents = allStudents.filter(student => !assignedStudentIds.has(student.id));
-
-				setStudents(availableStudents);
+				setStudents(response.status !== 204 && response.data.length ? response.data : []);
 			} catch (error) {
-				console.error("Error fetching students:", error);
+				console.error("Error fetching unassigned students:", error);
 				setStudents([]);
 			} finally {
 				setLoading(false);
 			}
 		};
 
-		fetchStudents();
-	}, [laId, auth.accessToken]);
+		fetchUnassignedStudents();
+	}, [auth.accessToken]);
 
 	const handleAddStudent = async (studentId) => {
 		try {
@@ -67,7 +47,7 @@ const AddStudentPage = () => {
 				}
 			});
 
-			setConfirmationMessage(`Student added!`);
+			setConfirmationMessage("Student added!");
 			setStudents((prevStudents) => prevStudents?.filter((s) => s.id !== studentId) || []);
 
 			setTimeout(() => setConfirmationMessage(""), 3000);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import StudentList from "../la/StudentList";
@@ -10,6 +10,8 @@ import EvaluationList from "../la/EvaluationList";
 const LearningAssistant = () => {
 	const { auth } = useAuth();
 	const { id: laId } = auth;
+
+	const navigate = useNavigate()
 
 	const [students, setStudents] = useState(null);
 	const [assignments, setAssignments] = useState(null);
@@ -111,7 +113,7 @@ const LearningAssistant = () => {
 				<p>No Students Assigned</p>
 			)}
 
-			<NavLink to="/la/addStudent">
+			<NavLink to={`/la/${laId}/addStudent`}>
 				<button>Add Student</button>
 			</NavLink>
 
@@ -122,7 +124,7 @@ const LearningAssistant = () => {
 				<p>No Assignments</p>
 			)}
 
-			<NavLink to="/la/addAssignment">
+			<NavLink to={`/la/${laId}/addAssignment`}>
 				<button>Add Assignment</button>
 			</NavLink>
 
@@ -131,6 +133,8 @@ const LearningAssistant = () => {
 
 			<h3>Your Evaluations</h3>
 			<EvaluationList evaluations={evaluations} />
+
+			<button onClick={() => navigate(-1)}>Go Back</button>
 		</div>
 	);
 };

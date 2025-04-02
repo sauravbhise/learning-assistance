@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 
 const AddAssignmentPage = () => {
 	const { auth } = useAuth();
-	const { id: laId } = auth; // LA ID
+	const { laId } = useParams()
 	const navigate = useNavigate();
 
 	const [title, setTitle] = useState("");
