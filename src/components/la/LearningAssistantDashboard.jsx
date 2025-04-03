@@ -128,11 +128,10 @@ const LearningAssistant = () => {
 				<button>Add Assignment</button>
 			</NavLink>
 
-			<h3>Submissions to Evaluate</h3>
-			<LaSubmissionList submissions={submissions} />
+			<NavLink to={`/la/${laId}/evaluations`}>
+				<button>Evaluations</button>
+			</NavLink>
 
-			<h3>Your Evaluations</h3>
-			<EvaluationList evaluations={evaluations} />
 
 			<button onClick={() => navigate(-1)}>Go Back</button>
 		</div>

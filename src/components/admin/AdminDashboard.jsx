@@ -58,7 +58,7 @@ const AdminDashboard = () => {
 			<LaList las={las} onRemoveUser={handleRemoveLA} />
 			<StudentList students={students} onRemoveUser={handleRemoveStudent} />
 			<button onClick={() => navigate("/register", { state: { fromUsersPage: true } })}>Add User</button>
-			<button onClick={() => navigate(-1)}>Go Back</button>
+			<button onClick={() => navigate("/")}>Go Back</button>
 		</div>
 	);
 };

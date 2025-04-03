@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AssignmentList from "./AssignmentList";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
@@ -6,6 +7,8 @@ import axios from "../../api/axios";
 const StudentDashboard = () => {
 	const { auth } = useAuth();
 	const { id } = auth;
+
+	const navigate = useNavigate()
 
 	const [pendingAssignments, setPendingAssignments] = useState(null);
 	const [completedAssignments, setCompletedAssignments] = useState(null);
@@ -49,6 +52,8 @@ const StudentDashboard = () => {
 			) : (
 				<p>No Completed Assignments</p>
 			)}
+
+			<button onClick={() => navigate("/")}>Go Back</button>
 		</div>
 	);
 };

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // For navigation
+import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import UserList from "./UserList";
 
 const Users = () => {
 	const { auth } = useAuth();
-	const navigate = useNavigate(); // Used to navigate to the AddUser page
+	const navigate = useNavigate();
 	const [admins, setAdmins] = useState([]);
 	const [las, setLAs] = useState([]);
 	const [students, setStudents] = useState([]);
@@ -28,7 +28,6 @@ const Users = () => {
 		fetchUsers("/users/students", setStudents);
 	}, [auth.accessToken]);
 
-	// Handlers for removing LAs and Students
 	const handleRemoveLA = async (id) => {
 		try {
 			const response = await axios.delete(`/users/${id}`, {

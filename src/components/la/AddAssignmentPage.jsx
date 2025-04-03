@@ -3,9 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 
+const DESCRIPTION_LIMIT = 500;
+
 const AddAssignmentPage = () => {
 	const { auth } = useAuth();
-	const { laId } = useParams()
+	const { laId } = useParams();
 	const navigate = useNavigate();
 
 	const [title, setTitle] = useState("");
@@ -18,6 +20,13 @@ const AddAssignmentPage = () => {
 		setFile(uploadedFile);
 	};
 
+	const handleDescriptionChange = (e) => {
+		const text = e.target.value;
+		if (text.length <= DESCRIPTION_LIMIT) {
+			setDescription(text);
+		}
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!title || !description || !file) {
@@ -25,26 +34,30 @@ const AddAssignmentPage = () => {
 			return;
 		}
 
-		const formData = new FormData()
-		formData.append("title", title)
-		formData.append("description", description)
-		formData.append("createdBy", laId)
-		formData.append("file", file)
+		const formData = new FormData();
+		formData.append("title", title);
+		formData.append("description", description);
+		formData.append("createdBy", laId);
+		formData.append("file", file);
 
-		const newAssignmentResponse = await axios.post("/assignments", formData, {
-			headers: {
-				Authorization: "Bearer " + auth.accessToken,
-				"Content-Type": "multipart/form-data"
+		try {
+			const newAssignmentResponse = await axios.post("/assignments", formData, {
+				headers: {
+					Authorization: "Bearer " + auth.accessToken,
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+			if (newAssignmentResponse.status === 200) {
+				setMessage("Assignment added successfully!");
+				setTitle("");
+				setDescription("");
+				setFile(null);
+			} else {
+				setMessage("Failed to add assignment. Try again.");
 			}
-		})
-
-		if (newAssignmentResponse.status === 200) {
-			setMessage("Assignment added successfully!");
-			setTitle("");
-			setDescription("");
-			setFile(null);
-		} else {
-			setMessage("Failed to add assignment. Try again.");
+		} catch (error) {
+			setMessage("Error: " + (error.response?.data?.message || "Only PDFs allowed"));
 		}
 	};
 
@@ -52,7 +65,7 @@ const AddAssignmentPage = () => {
 		<div>
 			<h1>Add Assignment</h1>
 
-			{message && <p>{message}</p>}
+			{message && <p style={{ color: message.includes("successfully") ? "green" : "red" }}>{message}</p>}
 
 			<form onSubmit={handleSubmit}>
 				<div>
@@ -62,7 +75,14 @@ const AddAssignmentPage = () => {
 
 				<div>
 					<label>Description:</label>
-					<textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+					<textarea
+						value={description}
+						onChange={handleDescriptionChange}
+						required
+					/>
+					<p style={{ fontSize: "12px", color: description.length === DESCRIPTION_LIMIT ? "red" : "black" }}>
+						{DESCRIPTION_LIMIT - description.length} characters left
+					</p>
 				</div>
 
 				<div>

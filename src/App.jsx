@@ -14,8 +14,9 @@ import SubmissionPage from "./components/student/SubmissionPage"
 import UnauthorizedPage from "./components/UnauthorizedPage"
 import NotFoundPage from "./components/NotFoundPage"
 import RequireAuth from "./components/RequireAuth"
-import ROLES from "./utils/roles"
 import AdminDashboard from "./components/admin/AdminDashboard"
+import EvaluationsPage from "./components/la/EvaluationsPage"
+import ROLES from "./utils/roles"
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path="la/:laId/students" element={<LaStudentMapping />} />
           <Route path="la/:laId/addStudent" element={<AddStudentPage />} />
           <Route path="la/:laId/addAssignment" element={<AddAssignmentPage />} />
+          <Route path="la/:laId/evaluations" element={<EvaluationsPage />} />
           <Route path="la/evaluate/:submissionId" element={<EvaluationPage />} />
         </Route>
 

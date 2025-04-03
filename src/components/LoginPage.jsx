@@ -99,7 +99,6 @@ const Login = () => {
 				<button>Sign In</button>
 			</form>
 
-			<NavLink to="/register">Sign Up</NavLink>
 		</div>
 
 	)

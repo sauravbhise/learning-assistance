@@ -63,7 +63,7 @@ const RegisterPage = () => {
 			setSuccess(true);
 
 			setTimeout(() => {
-				navigate(fromUsersPage ? "/admin" : "/login"); // Redirect accordingly
+				navigate(fromUsersPage ? "/admin" : "/login");
 			}, 2000);
 		} catch (error) {
 			if (!error?.response) {

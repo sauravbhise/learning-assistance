@@ -60,18 +60,27 @@ const AddSubmissionPage = () => {
 		formData.append("assignmentId", assignmentId)
 		formData.append("file", file)
 
-		const newSubmissionResponse = await axios.post("/submissions", formData, {
-			headers: {
-				Authorization: "Bearer " + auth.accessToken,
-				"Content-Type": "multipart/form-data"
-			}
-		})
+		try {
+			const newSubmissionResponse = await axios.post("/submissions", formData, {
+				headers: {
+					Authorization: "Bearer " + auth.accessToken,
+					"Content-Type": "multipart/form-data"
+				}
+			})
 
-		if (newSubmissionResponse.status === 200) {
-			setMessage("Assignment submitted!");
-			setFile(null);
-		} else {
-			setMessage("Failed to add submission. Try again.");
+			if (newSubmissionResponse.status === 200) {
+				setMessage("Assignment submitted!");
+				setFile(null);
+				navigate("/student")
+			} else {
+				setMessage("Failed to add submission. Try again.");
+			}
+		} catch (error) {
+			if (error.response && error.response.status === 500) {
+				setMessage("Only PDFs allowed.");
+			} else {
+				setMessage("Failed to add submission. Try again.");
+			}
 		}
 	};
 
@@ -103,7 +112,7 @@ const AddSubmissionPage = () => {
 				<button type="submit">Upload Submission</button>
 			</form>
 
-			<button onClick={() => navigate(-1)}>Go Back</button>
+			<button onClick={() => navigate("/student")}>Go Back</button>
 		</div>
 	);
 };
